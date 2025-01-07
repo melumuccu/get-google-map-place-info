@@ -45,7 +45,7 @@ const main = async () => {
 
     const outputPath = path.join("outputs", `${placeName}.md`);
     File.writeToFile(outputPath, output.join(""));
-    log(`出力ファイルが作成されました: ${outputPath}`);
+    log(`ファイルが作成・更新されました: ${outputPath}`, "success");
   } catch (e) {
     log(`エラーが発生しました: ${e}`, "error");
   }
