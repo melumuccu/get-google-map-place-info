@@ -9,7 +9,10 @@ import { log } from "./log";
  */
 export const writeToFile = (filePath: string, content: string) => {
   if (fs.existsSync(filePath)) {
-    log(`既存ファイルが存在するため上書きされます。 path: ${filePath}`, "warn");
+    log({
+      message: `既存ファイルが存在するため上書きされます。 path: ${filePath}`,
+      type: "warn",
+    });
     fs.truncateSync(filePath, 0);
   }
   fs.writeFileSync(filePath, content, { encoding: "utf-8" });

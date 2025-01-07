@@ -1,14 +1,25 @@
 import { styleText } from "node:util";
 
+type Log =
+  | {
+      message: string;
+      type?: "error" | "warn" | "log" | "success";
+    }
+  | {
+      message: Error;
+      type?: undefined;
+    };
+
 /**
  * ログを装飾して出力する
- * @param {string} message - 出力するメッセージ
- * @param {"error" | "warn" | "log" | "success"} [type="log"] - ログの種類
  */
-export const log = (
-  message: string,
-  type: "error" | "warn" | "log" | "success" = "log"
-) => {
+export const log = ({ message, type = "log" }: Log) => {
+  if (message instanceof Error) {
+    console.error(styleText("bgRed", " ERROR   "));
+    console.error(message);
+    return;
+  }
+
   switch (type) {
     case "error":
       console.error(

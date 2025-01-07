@@ -15,7 +15,7 @@ class GoogleMapClient {
    */
   private constructor() {
     this.client = new Client({});
-    log("Google Maps APIクライアントを初期化しました");
+    log({ message: "Google Maps APIクライアントを初期化しました" });
   }
 
   /**

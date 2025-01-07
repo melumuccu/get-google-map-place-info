@@ -13,8 +13,8 @@ dotenv.config();
 const main = async () => {
   const placeName = process.argv[2];
   if (!placeName) {
-    log("場所名を引数として指定してください", "error");
-    log('USAGE: make "場所名"');
+    log({ message: "場所名を引数として指定してください", type: "error" });
+    log({ message: 'USAGE: make "場所名"' });
     return;
   }
 
@@ -22,7 +22,7 @@ const main = async () => {
     const placeId = await googleMapClient.getPlaceId(placeName);
 
     if (!placeId) {
-      log("No results found.");
+      log({ message: "No results found." });
       return;
     }
 
@@ -33,9 +33,12 @@ const main = async () => {
 
     const outputPath = path.join("outputs", `${placeName}.md`);
     File.writeToFile(outputPath, output.join(""));
-    log(`ファイルが作成・更新されました: ${outputPath}`, "success");
+    log({
+      message: `ファイルが作成・更新されました: ${outputPath}`,
+      type: "success",
+    });
   } catch (e) {
-    log(`エラーが発生しました: ${e}`, "error");
+    log({ message: e as Error });
   }
 };
 
