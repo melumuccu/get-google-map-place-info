@@ -93,10 +93,10 @@ const getPlaceDetails = async (
  * @param {any} place - 場所の詳細情報
  */
 const displayBasicInfo = (place: any, output: string[]) => {
-  output.push("# Name\n");
-  output.push(place.name + "\n");
-  output.push("# Address\n");
-  output.push(place.formatted_address + "\n");
+  output.push("# Name\n\n");
+  output.push(place.name + "\n\n");
+  output.push("# Address\n\n");
+  output.push(place.formatted_address + "\n\n");
 };
 
 /**
@@ -110,33 +110,17 @@ const displayReviews = (reviews: any[], output: string[]) => {
     .sort((a, b) => b.rating - a.rating); // 評価の高い順にソート
 
   if (filteredReviews.length > 0) {
-    output.push("# Reviews\n");
+    output.push("# Reviews\n\n");
 
     // 4,5星レビューを全て表示
     const highRated = filteredReviews.filter((review) => review.rating >= 4);
     highRated.forEach((review, index) => {
-      output.push(`## Review ${index + 1}\n`);
+      output.push(`## Review ${index + 1}\n\n`);
       output.push(`**Author**: ${review.author_name}\n`);
       output.push(`**Rating**: ${"⭐".repeat(review.rating)}\n`);
       output.push(`${review.text}\n`);
-      output.push("---\n");
+      output.push("\n---\n\n");
     });
-
-    // 3星以下のレビューを最大5件表示
-    const otherReviews = filteredReviews
-      .filter((review) => review.rating < 4)
-      .slice(0, 5);
-
-    if (otherReviews.length > 0) {
-      output.push("\n# Other Reviews\n");
-      otherReviews.forEach((review, index) => {
-        output.push(`## Review ${index + 1}\n`);
-        output.push(`**Author**: ${review.author_name}\n`);
-        output.push(`**Rating**: ${"⭐".repeat(review.rating)}\n`);
-        output.push(`${review.text}\n`);
-        output.push("---\n");
-      });
-    }
   } else {
     output.push("\nNo reviews available.\n");
   }
