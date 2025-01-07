@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import * as path from "path";
 import { log } from "./util/log";
 import * as File from "./util/file";
-import * as GoogleMap from "./lib/googleMap";
+import { googleMapClient } from "./lib/googleMap";
 
 // .envファイルから環境変数を読み込む
 dotenv.config();
@@ -11,14 +11,6 @@ dotenv.config();
  * メイン処理
  */
 const main = async () => {
-  const client = GoogleMap.getClient();
-  const apiKey = GoogleMap.getApiKey();
-
-  if (!apiKey) {
-    log(".envファイルにGOOGLE_MAPS_API_KEYが設定されていません", "error");
-    return;
-  }
-
   const placeName = process.argv[2];
   if (!placeName) {
     log("場所名を引数として指定してください", "error");
@@ -27,18 +19,14 @@ const main = async () => {
   }
 
   try {
-    const placeId = await GoogleMap.getPlaceId(client, apiKey, placeName);
+    const placeId = await googleMapClient.getPlaceId(placeName);
 
     if (!placeId) {
       log("No results found.");
       return;
     }
 
-    const placeDetails = await GoogleMap.getPlaceDetails(
-      client,
-      apiKey,
-      placeId
-    );
+    const placeDetails = await googleMapClient.getPlaceDetails(placeId);
     const output: string[] = [];
     File.displayBasicInfo(placeDetails, output);
     File.displayReviews(placeDetails.reviews || [], output);
