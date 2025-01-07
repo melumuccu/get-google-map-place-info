@@ -143,12 +143,15 @@ const main = async () => {
     return;
   }
 
+  const placeName = process.argv[2];
+  if (!placeName) {
+    console.error("Error: Please provide a place name as an argument");
+    console.log('Usage: make run INPUT="place name"');
+    return;
+  }
+
   try {
-    const placeId = await getPlaceId(
-      client,
-      apiKey,
-      "すぱいすかれー HARU. (ハル)"
-    );
+    const placeId = await getPlaceId(client, apiKey, placeName);
 
     if (!placeId) {
       console.log("No results found.");
