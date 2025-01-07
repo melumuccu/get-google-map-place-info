@@ -9,15 +9,29 @@ class GoogleMapClient {
   private static instance: GoogleMapClient;
   private client: Client;
 
+  /**
+   * GoogleMapClientのプライベートコンストラクタ
+   * @private
+   */
   private constructor() {
     this.client = new Client({});
     log("Google Maps APIクライアントを初期化しました");
   }
 
+  /**
+   * 環境変数からGoogle Maps APIキーを取得する
+   * @returns {string|undefined} APIキー（設定されていない場合はundefined）
+   * @private
+   */
   private getApiKey(): string | undefined {
     return process.env.GOOGLE_MAPS_API_KEY;
   }
 
+  /**
+   * GoogleMapClientのシングルトンインスタンスを取得する
+   * @returns {GoogleMapClient} GoogleMapClientのインスタンス
+   * @public
+   */
   public static getInstance(): GoogleMapClient {
     if (!GoogleMapClient.instance) {
       GoogleMapClient.instance = new GoogleMapClient();
@@ -25,6 +39,13 @@ class GoogleMapClient {
     return GoogleMapClient.instance;
   }
 
+  /**
+   * 場所の名前からPlace IDを取得する
+   * @param {string} placeName - 検索する場所の名前
+   * @returns {Promise<string|null>} 場所のID（見つからない場合はnull）
+   * @throws {Error} APIキーが設定されていない場合
+   * @public
+   */
   public async getPlaceId(placeName: string): Promise<string | null> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
@@ -51,6 +72,13 @@ class GoogleMapClient {
     return null;
   }
 
+  /**
+   * Place IDから場所の詳細情報を取得する
+   * @param {string} placeId - 場所のID
+   * @returns {Promise<any>} 場所の詳細情報
+   * @throws {Error} APIキーが設定されていない場合
+   * @public
+   */
   public async getPlaceDetails(placeId: string): Promise<any> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
