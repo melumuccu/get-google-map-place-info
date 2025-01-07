@@ -134,14 +134,16 @@ const main = async () => {
   const apiKey = getApiKey();
 
   if (!apiKey) {
-    console.error("Error: GOOGLE_MAPS_API_KEY is not set in .env file.");
+    console.error(
+      "Error: .envファイルにGOOGLE_MAPS_API_KEYが設定されていません"
+    );
     return;
   }
 
   const placeName = process.argv[2];
   if (!placeName) {
-    console.error("Error: Please provide a place name as an argument");
-    console.log('Usage: make run INPUT="place name"');
+    console.error("Error: 場所名を引数として指定してください");
+    console.log('Usage: make "場所名"');
     return;
   }
 
@@ -149,7 +151,7 @@ const main = async () => {
     const placeId = await getPlaceId(client, apiKey, placeName);
 
     if (!placeId) {
-      console.log("No results found.");
+      console.log("log: No results found.");
       return;
     }
 
@@ -160,7 +162,7 @@ const main = async () => {
 
     const outputPath = path.join("outputs", `${placeName}.md`);
     writeToFile(outputPath, output.join(""));
-    console.log(`Output written to ${outputPath}`);
+    console.log(`log: 出力ファイルが作成されました: ${outputPath}`);
   } catch (e) {
     console.error("Error:", e);
   }
