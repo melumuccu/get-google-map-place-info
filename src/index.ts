@@ -5,6 +5,17 @@ import {
   Language,
 } from "@googlemaps/google-maps-services-js";
 import * as dotenv from "dotenv";
+import * as fs from "fs";
+import * as path from "path";
+
+/**
+ * ファイルに内容を書き込む
+ * @param {string} filePath - 出力ファイルパス
+ * @param {string} content - 書き込む内容
+ */
+const writeToFile = (filePath: string, content: string) => {
+  fs.writeFileSync(filePath, content, { encoding: "utf-8" });
+};
 
 // .envファイルから環境変数を読み込む
 dotenv.config();
@@ -81,34 +92,34 @@ const getPlaceDetails = async (
  * 場所の基本情報を表示する
  * @param {any} place - 場所の詳細情報
  */
-const displayBasicInfo = (place: any) => {
-  console.log("# Name\n");
-  console.log(place.name + "\n");
-  console.log("# Address\n");
-  console.log(place.formatted_address + "\n");
+const displayBasicInfo = (place: any, output: string[]) => {
+  output.push("# Name\n");
+  output.push(place.name + "\n");
+  output.push("# Address\n");
+  output.push(place.formatted_address + "\n");
 };
 
 /**
  * レビュー情報を表示する
  * @param {any[]} reviews - レビュー配列
  */
-const displayReviews = (reviews: any[]) => {
+const displayReviews = (reviews: any[], output: string[]) => {
   // 4,5星レビューを全て表示し、3星以下は最大5件表示
   const filteredReviews = reviews
     .filter((review) => review.text?.trim()) // 空のレビューを除外
     .sort((a, b) => b.rating - a.rating); // 評価の高い順にソート
 
   if (filteredReviews.length > 0) {
-    console.log("# Reviews\n");
+    output.push("# Reviews\n");
 
     // 4,5星レビューを全て表示
     const highRated = filteredReviews.filter((review) => review.rating >= 4);
     highRated.forEach((review, index) => {
-      console.log(`## Review ${index + 1}\n`);
-      console.log(`**Author**: ${review.author_name}\n`);
-      console.log(`**Rating**: ${"⭐".repeat(review.rating)}\n`);
-      console.log(`${review.text}\n`);
-      console.log("---\n");
+      output.push(`## Review ${index + 1}\n`);
+      output.push(`**Author**: ${review.author_name}\n`);
+      output.push(`**Rating**: ${"⭐".repeat(review.rating)}\n`);
+      output.push(`${review.text}\n`);
+      output.push("---\n");
     });
 
     // 3星以下のレビューを最大5件表示
@@ -117,17 +128,17 @@ const displayReviews = (reviews: any[]) => {
       .slice(0, 5);
 
     if (otherReviews.length > 0) {
-      console.log("\n# Other Reviews\n");
+      output.push("\n# Other Reviews\n");
       otherReviews.forEach((review, index) => {
-        console.log(`## Review ${index + 1}\n`);
-        console.log(`**Author**: ${review.author_name}\n`);
-        console.log(`**Rating**: ${"⭐".repeat(review.rating)}\n`);
-        console.log(`${review.text}\n`);
-        console.log("---\n");
+        output.push(`## Review ${index + 1}\n`);
+        output.push(`**Author**: ${review.author_name}\n`);
+        output.push(`**Rating**: ${"⭐".repeat(review.rating)}\n`);
+        output.push(`${review.text}\n`);
+        output.push("---\n");
       });
     }
   } else {
-    console.log("\nNo reviews available.\n");
+    output.push("\nNo reviews available.\n");
   }
 };
 
@@ -159,8 +170,13 @@ const main = async () => {
     }
 
     const placeDetails = await getPlaceDetails(client, apiKey, placeId);
-    displayBasicInfo(placeDetails);
-    displayReviews(placeDetails.reviews || []);
+    const output: string[] = [];
+    displayBasicInfo(placeDetails, output);
+    displayReviews(placeDetails.reviews || [], output);
+
+    const outputPath = path.join("outputs", `${placeName}.md`);
+    writeToFile(outputPath, output.join(""));
+    console.log(`Output written to ${outputPath}`);
   } catch (e) {
     console.error("Error:", e);
   }
