@@ -1,0 +1,24 @@
+{
+  "author": "",
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "3.4.0",
+    "dotenv": "16.4.7"
+  },
+  "description": "",
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "dotenv-cli": "8.0.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.2"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "google-place-api",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "dotenv -e .env -- ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
