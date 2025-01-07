@@ -7,6 +7,29 @@ import {
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
+import { styleText } from "node:util";
+
+/**
+ * ログを装飾して出力する
+ * @param {string} message - 出力するメッセージ
+ * @param {"error" | "warn" | "log"} [type="log"] - ログの種類
+ */
+const log = (message: string, type: "error" | "warn" | "log" = "log") => {
+  switch (type) {
+    case "error":
+      console.error(
+        styleText("bgRed", " ERROR ") + styleText("red", `${message}`)
+      );
+      break;
+    case "warn":
+      console.warn(
+        styleText("bgYellow", " WARN  ") + styleText("yellow", `${message}`)
+      );
+      break;
+    default:
+      console.log(styleText("bgGray", " LOG   ") + message);
+  }
+};
 
 /**
  * ファイルに内容を書き込む
@@ -15,9 +38,7 @@ import * as path from "path";
  */
 const writeToFile = (filePath: string, content: string) => {
   if (fs.existsSync(filePath)) {
-    console.warn(
-      `WARN: 既存ファイルが存在するため上書きされます。 path: ${filePath}`
-    );
+    log(`既存ファイルが存在するため上書きされます。 path: ${filePath}`, "warn");
     fs.truncateSync(filePath, 0);
   }
   fs.writeFileSync(filePath, content, { encoding: "utf-8" });
@@ -140,16 +161,14 @@ const main = async () => {
   const apiKey = getApiKey();
 
   if (!apiKey) {
-    console.error(
-      "ERROR: .envファイルにGOOGLE_MAPS_API_KEYが設定されていません"
-    );
+    log(".envファイルにGOOGLE_MAPS_API_KEYが設定されていません", "error");
     return;
   }
 
   const placeName = process.argv[2];
   if (!placeName) {
-    console.error("ERROR: 場所名を引数として指定してください");
-    console.log('USAGE: make "場所名"');
+    log("場所名を引数として指定してください", "error");
+    log('USAGE: make "場所名"');
     return;
   }
 
@@ -157,7 +176,7 @@ const main = async () => {
     const placeId = await getPlaceId(client, apiKey, placeName);
 
     if (!placeId) {
-      console.log("LOG: No results found.");
+      log("No results found.");
       return;
     }
 
@@ -168,9 +187,9 @@ const main = async () => {
 
     const outputPath = path.join("outputs", `${placeName}.md`);
     writeToFile(outputPath, output.join(""));
-    console.log(`LOG: 出力ファイルが作成されました: ${outputPath}`);
+    log(`出力ファイルが作成されました: ${outputPath}`);
   } catch (e) {
-    console.error("ERROR:", e);
+    log(`エラーが発生しました: ${e}`, "error");
   }
 };
 
