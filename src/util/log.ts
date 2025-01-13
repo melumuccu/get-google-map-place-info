@@ -1,5 +1,5 @@
 import { PlaceData } from "@googlemaps/google-maps-services-js";
-import { styleText } from "node:util";
+import { styleText, inspect } from "node:util";
 
 type Log =
   | {
@@ -48,5 +48,5 @@ export const log = ({ message, type = "log" }: Log) => {
  */
 export const displayAllPlaceInfo = (place: Partial<PlaceData>) => {
   console.log("//======================");
-  console.log(place);
+  console.log(inspect(place, { depth: null, colors: true }));
 };
