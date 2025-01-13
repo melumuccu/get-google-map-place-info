@@ -80,7 +80,10 @@ class GoogleMapClient {
    * @throws {Error} APIキーが設定されていない場合
    * @public
    */
-  public async getPlaceDetails(placeId: string): Promise<Partial<PlaceData>> {
+  public async getPlaceDetails(
+    placeId: string,
+    fields: string[]
+  ): Promise<Partial<PlaceData>> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
       throw new Error("APIキーが設定されていません");
@@ -90,49 +93,7 @@ class GoogleMapClient {
       params: {
         place_id: placeId,
         key: apiKey,
-        fields: [
-          // 指定できる全てを指定している。(see: https://developers.google.com/maps/documentation/places/web-service/details?hl=ja#Place)
-          "address_components",
-          "adr_address",
-          "business_status",
-          "curbside_pickup",
-          "current_opening_hours",
-          "delivery",
-          "dine_in",
-          "editorial_summary",
-          "formatted_address",
-          "formatted_phone_number",
-          "geometry",
-          "icon",
-          "icon_background_color",
-          "icon_mask_base_uri",
-          "international_phone_number",
-          "name",
-          "opening_hours",
-          "photos",
-          "place_id",
-          "plus_code",
-          "price_level",
-          "rating",
-          "reservable",
-          "reviews",
-          "secondary_opening_hours",
-          "serves_beer",
-          "serves_breakfast",
-          "serves_brunch",
-          "serves_dinner",
-          "serves_lunch",
-          "serves_vegetarian_food",
-          "serves_wine",
-          "takeout",
-          "types",
-          "url",
-          "user_ratings_total",
-          "utc_offset",
-          "vicinity",
-          "website",
-          "wheelchair_accessible_entrance",
-        ],
+        fields,
         language: Language.ja,
       },
       timeout: 1000,
