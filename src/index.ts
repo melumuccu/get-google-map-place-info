@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import * as path from "path";
 import { log } from "./util/log";
+import * as Log from "./util/log";
 import * as File from "./util/file";
 import { googleMapClient } from "./lib/googleMap";
 
@@ -37,6 +38,8 @@ const main = async () => {
       message: `ファイルが作成・更新されました: ${outputPath}`,
       type: "success",
     });
+
+    Log.displayAllPlaceInfo(placeDetails);
   } catch (e) {
     log({ message: e as Error });
   }

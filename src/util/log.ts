@@ -1,3 +1,4 @@
+import { PlaceData } from "@googlemaps/google-maps-services-js";
 import { styleText } from "node:util";
 
 type Log =
@@ -39,4 +40,13 @@ export const log = ({ message, type = "log" }: Log) => {
     default:
       console.log(styleText("bgGray", " LOG     ") + ` ${message}`);
   }
+};
+
+/**
+ * 場所の詳細情報を全てログに出力する
+ * @param {Partial<PlaceData>} place - 場所の詳細情報
+ */
+export const displayAllPlaceInfo = (place: Partial<PlaceData>) => {
+  console.log("//======================");
+  console.log(place);
 };
