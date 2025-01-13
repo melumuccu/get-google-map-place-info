@@ -2,6 +2,7 @@ import {
   Client,
   PlaceInputType,
   Language,
+  PlaceData,
 } from "@googlemaps/google-maps-services-js";
 import { log } from "../util/log";
 
@@ -75,11 +76,11 @@ class GoogleMapClient {
   /**
    * Place IDから場所の詳細情報を取得する
    * @param {string} placeId - 場所のID
-   * @returns {Promise<any>} 場所の詳細情報
+   * @returns {Promise<Partial<PlaceData>>} 場所の詳細情報
    * @throws {Error} APIキーが設定されていない場合
    * @public
    */
-  public async getPlaceDetails(placeId: string): Promise<any> {
+  public async getPlaceDetails(placeId: string): Promise<Partial<PlaceData>> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
       throw new Error("APIキーが設定されていません");

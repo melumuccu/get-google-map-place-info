@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { log } from "./log";
+import { PlaceData } from "@googlemaps/google-maps-services-js";
 
 /**
  * ファイルに内容を書き込む
@@ -20,9 +21,12 @@ export const writeToFile = (filePath: string, content: string) => {
 
 /**
  * 場所の基本情報を表示する
- * @param {any} place - 場所の詳細情報
+ * @param {Partial<PlaceData>} place - 場所の詳細情報
  */
-export const displayBasicInfo = (place: any, output: string[]) => {
+export const displayBasicInfo = (
+  place: Partial<PlaceData>,
+  output: string[]
+) => {
   output.push("# Name\n\n");
   output.push(place.name + "\n\n");
   output.push("# Address\n\n");
@@ -31,9 +35,12 @@ export const displayBasicInfo = (place: any, output: string[]) => {
 
 /**
  * レビュー情報を表示する
- * @param {any[]} reviews - レビュー配列
+ * @param {PlaceData['reviews']} reviews - レビュー配列
  */
-export const displayReviews = (reviews: any[], output: string[]) => {
+export const displayReviews = (
+  reviews: PlaceData["reviews"],
+  output: string[]
+) => {
   // 4,5星レビューを全て表示し、3星以下は最大5件表示
   const filteredReviews = reviews
     .filter((review) => review.text?.trim()) // 空のレビューを除外
