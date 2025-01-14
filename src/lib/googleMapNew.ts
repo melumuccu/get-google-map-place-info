@@ -15,6 +15,7 @@ export type FieldMask = {
 class GoogleMapNewClient {
   private static instance: GoogleMapNewClient;
   private client: PlacesClient;
+  private apiKey: string;
 
   /**
    * GoogleMapNewClientのプライベートコンストラクタ
@@ -25,6 +26,7 @@ class GoogleMapNewClient {
     if (!apiKey) {
       throw new Error("APIキーが設定されていません");
     }
+    this.apiKey = apiKey;
     this.client = new PlacesClient({ apiKey });
     log({ message: "Google Maps API(New)クライアントを初期化しました" });
   }
@@ -58,11 +60,6 @@ class GoogleMapNewClient {
    * @public
    */
   public async getPlaceId(placeName: string): Promise<string | null> {
-    const apiKey = this.getApiKey();
-    if (!apiKey) {
-      throw new Error("APIキーが設定されていません");
-    }
-
     const response = await this.client.searchText(
       {
         textQuery: placeName,
@@ -101,11 +98,6 @@ class GoogleMapNewClient {
     placeId: string,
     fieldMasks: FieldMask[]
   ): Promise<any> {
-    const apiKey = this.getApiKey();
-    if (!apiKey) {
-      throw new Error("APIキーが設定されていません");
-    }
-
     const fields = fieldMasks.map((f) => f.field).join(",");
 
     const response = await axios.get(
@@ -114,7 +106,7 @@ class GoogleMapNewClient {
         params: {
           languageCode: "ja",
           fields,
-          key: apiKey,
+          key: this.apiKey,
         },
       }
     );
