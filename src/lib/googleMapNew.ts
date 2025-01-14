@@ -85,23 +85,24 @@ class GoogleMapNewClient {
    * @throws {Error} APIキーが設定されていない場合
    * @public
    */
-  public async getPlaceDetails(
-    placeId: string,
-    fieldMasks: FieldMask[]
-  ): Promise<any> {
+  public async getPlaceDetails(placeId: string, fieldMasks: FieldMask[]) {
     const fields = fieldMasks.map((f) => f.field).join(",");
 
-    const response = await axios.get(
-      `https://places.googleapis.com/v1/places/${placeId}`,
+    const response = await this.client.getPlace(
       {
-        params: {
-          languageCode: "ja",
-          fields,
-          key: this.apiKey,
+        languageCode: "ja",
+        name: `places/${placeId}`,
+      },
+      {
+        otherArgs: {
+          headers: {
+            "X-Goog-FieldMask": fields,
+          },
         },
       }
     );
-    return response.data;
+    const [searchResult] = response;
+    return searchResult;
   }
 }
 
