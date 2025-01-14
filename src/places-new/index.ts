@@ -218,7 +218,7 @@ const main = async () => {
 
     // 基本情報の表示
     if (placeDetails.displayName) {
-      output.push(`# ${placeDetails.displayName}\n\n`);
+      output.push(`# ${placeDetails.displayName.text}\n\n`);
     }
     if (placeDetails.formattedAddress) {
       output.push(`**住所**: ${placeDetails.formattedAddress}\n\n`);
@@ -227,16 +227,16 @@ const main = async () => {
     // レビューの表示
     if (placeDetails.reviews && placeDetails.reviews.length > 0) {
       output.push("## レビュー\n\n");
-      placeDetails.reviews.forEach((review: any) => {
-        output.push(`### ${review.authorName}\n`);
+      placeDetails.reviews.forEach((review) => {
+        output.push(`### ${review.authorAttribution?.displayName}\n`);
         if (review.rating) {
           output.push(`評価: ${review.rating}点\n\n`);
         }
-        if (review.text) {
-          output.push(`${review.text}\n\n`);
+        if (review.text?.text) {
+          output.push(`${review.text.text}\n\n`);
         }
-        if (review.publishTime) {
-          const date = new Date(review.publishTime);
+        if (review.publishTime?.seconds) {
+          const date = new Date(Number(review.publishTime.seconds) * 1000);
           output.push(`投稿日時: ${date.toLocaleDateString("ja-JP")}\n\n`);
         }
       });
@@ -250,8 +250,7 @@ const main = async () => {
     });
 
     // 全ての場所情報をコンソールに表示
-    log({ message: "=== 全ての場所情報 ===" });
-    log({ message: JSON.stringify(placeDetails, null, 2) });
+    Log.displayAllPlaceInfo(placeDetails);
   } catch (e) {
     log({ message: e as Error });
   }

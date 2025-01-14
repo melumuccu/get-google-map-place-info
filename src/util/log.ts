@@ -1,5 +1,6 @@
 import { PlaceData } from "@googlemaps/google-maps-services-js";
 import { styleText, inspect } from "node:util";
+import { PlacesClient } from "@googlemaps/places";
 
 type Log =
   | {
@@ -46,7 +47,7 @@ export const log = ({ message, type = "log" }: Log) => {
  * 場所の詳細情報を全てログに出力する
  * @param {Partial<PlaceData>} place - 場所の詳細情報
  */
-export const displayAllPlaceInfo = (place: Partial<PlaceData>) => {
+export const displayAllPlaceInfo = (place: any) => {
   console.log("//======================");
   console.log(inspect(place, { depth: null, colors: true }));
 };

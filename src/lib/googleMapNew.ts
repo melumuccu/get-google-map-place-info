@@ -1,6 +1,5 @@
 import { PlacesClient } from "@googlemaps/places";
 import { log } from "../util/log";
-import axios from "axios";
 import * as dotenv from "dotenv";
 
 // .envファイルから環境変数を読み込む
