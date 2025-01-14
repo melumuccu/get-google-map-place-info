@@ -1,5 +1,8 @@
 import * as fs from "fs";
-import { log } from "./log";
+import { log } from "../log";
+import { google } from "@googlemaps/places/build/protos/protos";
+
+type Place = google.maps.places.v1.IPlace;
 
 /**
  * ファイルに内容を書き込む

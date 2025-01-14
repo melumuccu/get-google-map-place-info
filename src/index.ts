@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import * as path from "path";
 import { log } from "./util/log";
 import * as Log from "./util/log";
-import * as File from "./util/file";
+import * as File from "./util/file/index";
 import { googleMapNewClient } from "./lib/googleMapNew";
 import { FIELD_MASKS } from "./lib/fieldMasks";
 
@@ -37,31 +37,10 @@ const main = async () => {
     );
     const output: string[] = [];
 
-    // 基本情報の表示
-    if (placeDetails.displayName) {
-      output.push(`# ${placeDetails.displayName.text}\n\n`);
-    }
-    if (placeDetails.formattedAddress) {
-      output.push(`**住所**: ${placeDetails.formattedAddress}\n\n`);
-    }
-
-    // レビューの表示
-    if (placeDetails.reviews && placeDetails.reviews.length > 0) {
-      output.push("## レビュー\n\n");
-      placeDetails.reviews.forEach((review) => {
-        output.push(`### ${review.authorAttribution?.displayName}\n`);
-        if (review.rating) {
-          output.push(`評価: ${review.rating}点\n\n`);
-        }
-        if (review.text?.text) {
-          output.push(`${review.text.text}\n\n`);
-        }
-        if (review.publishTime?.seconds) {
-          const date = new Date(Number(review.publishTime.seconds) * 1000);
-          output.push(`投稿日時: ${date.toLocaleDateString("ja-JP")}\n\n`);
-        }
-      });
-    }
+    // 各セクションの追加
+    File.addBasicInfo(output, placeDetails);
+    File.addOtherInfo(output, placeDetails);
+    File.addReviews(output, placeDetails);
 
     const outputPath = path.join("outputs", `${placeName}_new.md`);
     File.writeToFile(outputPath, output.join(""));
