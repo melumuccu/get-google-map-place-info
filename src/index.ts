@@ -42,7 +42,7 @@ const main = async () => {
     File.addOtherInfo(output, placeDetails);
     File.addReviews(output, placeDetails);
 
-    const outputPath = path.join("outputs", `${placeName}_new.md`);
+    const outputPath = path.join("outputs", `${placeName}.md`);
     File.writeToFile(outputPath, output.join(""));
     log({
       message: `ファイルが作成・更新されました: ${outputPath}`,
