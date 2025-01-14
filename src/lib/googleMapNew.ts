@@ -22,12 +22,11 @@ class GoogleMapNewClient {
    * @private
    */
   private constructor() {
-    const apiKey = this.getApiKey();
-    if (!apiKey) {
+    this.apiKey = this.getApiKey() as string;
+    if (!this.apiKey) {
       throw new Error("APIキーが設定されていません");
     }
-    this.apiKey = apiKey;
-    this.client = new PlacesClient({ apiKey });
+    this.client = new PlacesClient({ apiKey: this.apiKey });
     log({ message: "Google Maps API(New)クライアントを初期化しました" });
   }
 
