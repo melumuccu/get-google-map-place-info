@@ -1,6 +1,4 @@
-import { PlaceData } from "@googlemaps/google-maps-services-js";
 import { styleText, inspect } from "node:util";
-import { PlacesClient } from "@googlemaps/places";
 
 type Log =
   | {

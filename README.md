@@ -1,4 +1,4 @@
-Google Place API を使用して指定された場所の情報を取得し、結果をファイルに出力するツールです。
+Google Place API(New) を使用して指定された場所の情報を取得し、結果をファイルに出力するツールです。
 
 # HOW TO USE
 
@@ -13,7 +13,7 @@ cp .env.example .env
 ※ API キーは以下の設定にする
 
 - アプリケーションの制限: なし
-- API の制限: Places API
+- API の制限: Places API(New)
 
 ## 2. 依存関係をインストール
 
@@ -23,7 +23,7 @@ pnpm install
 
 ## 3. make を実行
 
-- XXXX は実際に Google Place API で検索したい場所名に置き換える
+- XXXX は実際に Place API(New) で検索したい場所名に置き換える
 
 ```bash
 make "XXXX"

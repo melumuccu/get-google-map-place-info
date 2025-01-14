@@ -1,7 +1,7 @@
 {
   "author": "",
   "dependencies": {
-    "@googlemaps/google-maps-services-js": "3.4.0",
+    "@googlemaps/places": "1.8.0",
     "dotenv": "16.4.7"
   },
   "description": "",
