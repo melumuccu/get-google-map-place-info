@@ -1,6 +1,7 @@
 import { PlacesClient } from "@googlemaps/places";
 import { log } from "../util/log";
 import * as dotenv from "dotenv";
+import { google } from "@googlemaps/places/build/protos/protos";
 
 // .envファイルから環境変数を読み込む
 dotenv.config();
@@ -101,7 +102,18 @@ class GoogleMapNewClient {
       }
     );
     const [searchResult] = response;
-    return searchResult;
+
+    // fieldMasks の field に対応する値だけに絞り込んだオブジェクト
+    const searchResultMapped: Partial<google.maps.places.v1.IPlace> = fieldMasks
+      .map((f) => f.field)
+      .reduce((acc: Partial<google.maps.places.v1.IPlace>, field) => {
+        acc[field as keyof google.maps.places.v1.IPlace] = (
+          searchResult as any
+        )[field];
+        return acc;
+      }, {});
+
+    return searchResultMapped;
   }
 }
 
