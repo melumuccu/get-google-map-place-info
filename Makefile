@@ -4,4 +4,4 @@
 	@make start INPUT="$*"
 
 start:
-	npx tsc && node dist/src/index.js "$(INPUT)"
+	rm -rf dist && npx tsc && node dist/index.js "$(INPUT)"
