@@ -1,3 +1,4 @@
+// Note: このファイルは @googlemaps/google-maps-services-js ライブラリを使用しています
 import * as dotenv from "dotenv";
 import * as path from "path";
 import { log } from "./util/log";
