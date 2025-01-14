@@ -22,7 +22,7 @@ class GoogleMapNewClient {
    * @private
    */
   private constructor() {
-    this.apiKey = this.getApiKey() as string;
+    this.apiKey = this.getApiKey() || "";
     if (!this.apiKey) {
       throw new Error("APIキーが設定されていません");
     }
@@ -74,15 +74,7 @@ class GoogleMapNewClient {
     );
 
     const [searchResult] = response;
-    if (
-      searchResult &&
-      searchResult.places &&
-      searchResult.places.length > 0 &&
-      searchResult.places[0].id
-    ) {
-      return searchResult.places[0].id;
-    }
-    return null;
+    return searchResult?.places?.[0]?.id || null;
   }
 
   /**
