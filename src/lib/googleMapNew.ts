@@ -6,6 +6,12 @@ import * as dotenv from "dotenv";
 // .envファイルから環境変数を読み込む
 dotenv.config();
 
+export type FieldMask = {
+  description: string;
+  field: string;
+  memo?: string;
+};
+
 class GoogleMapNewClient {
   private static instance: GoogleMapNewClient;
   private client: PlacesClient;
@@ -52,33 +58,26 @@ class GoogleMapNewClient {
    * @public
    */
   public async getPlaceId(placeName: string): Promise<string | null> {
-    console.log(
-      "🚀 => file: googleMapNew.ts:55 => GoogleMapNewClient => getPlaceId => placeName:",
-      placeName
-    );
-
     const apiKey = this.getApiKey();
     if (!apiKey) {
       throw new Error("APIキーが設定されていません");
     }
 
-    const request = {
-      textQuery: placeName,
-      languageCode: "ja",
-    };
-
-    const options = {
-      otherArgs: {
-        headers: {
-          "X-Goog-FieldMask": "places.id,places.displayName",
-        },
+    const response = await this.client.searchText(
+      {
+        textQuery: placeName,
+        languageCode: "ja",
       },
-    };
-
-    const response = await this.client.searchText(request, options);
+      {
+        otherArgs: {
+          headers: {
+            "X-Goog-FieldMask": "places.id,places.displayName",
+          },
+        },
+      }
+    );
 
     const [searchResult] = response;
-
     if (
       searchResult &&
       searchResult.places &&
@@ -92,32 +91,33 @@ class GoogleMapNewClient {
 
   /**
    * Place IDから場所の詳細情報を取得する
+   * MEMO: `@googlemaps/places` のクライアントではPlace Details APIをサポートしていないため、URLを直接叩いている。
    * @param {string} placeId - 場所のID
    * @returns {Promise<any>} 場所の詳細情報
    * @throws {Error} APIキーが設定されていない場合
    * @public
    */
-  public async getPlaceDetails(placeId: string): Promise<any> {
+  public async getPlaceDetails(
+    placeId: string,
+    fieldMasks: FieldMask[]
+  ): Promise<any> {
     const apiKey = this.getApiKey();
     if (!apiKey) {
       throw new Error("APIキーが設定されていません");
     }
 
-    // 新しいPlaces APIでは全てのフィールドを明示的に指定
+    const fields = fieldMasks.map((f) => f.field).join(",");
+
     const response = await axios.get(
       `https://places.googleapis.com/v1/places/${placeId}`,
       {
         params: {
           languageCode: "ja",
-        },
-        headers: {
-          "X-Goog-Api-Key": apiKey,
-          "X-Goog-FieldMask":
-            "id,displayName,formattedAddress,addressComponents,plusCode,location,viewport,rating,googleMapsUri,websiteUri,regularOpeningHours,currentOpeningHours,secondaryOpeningHours,businessStatus,userRatingCount,reviews,photos,priceLevel,editorialSummary,primaryType,types,nationalPhoneNumber,internationalPhoneNumber,formattedPhoneNumber,takeout,delivery,dineIn,curbsidePickup,reservable,servesBreakfast,servesBrunch,servesLunch,servesDinner,servesBeer,servesWine,servesVegetarianFood,wheelchairAccessibleEntrance,iconMaskBaseUri,iconBackgroundColor",
+          fields,
+          key: apiKey,
         },
       }
     );
-
     return response.data;
   }
 }
